@@ -1,0 +1,47 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: spring-app
+spec:
+  selector:
+    app: spring-app
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+
+# spec:
+#   type: NodePort
+#   ports:
+#   - port: 8080
+#     nodePort: 30090
+#   selector:
+#     app: spring-app
+#     tier: backend
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-app
+spec:
+  selector:
+    matchLabels:
+      app: spring-app
+      tier: backend
+      track: stable
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: spring-app
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: spring-app  
+          image: "amalcp/spiring-app:01"
+          ports:
+            - name: http
+              containerPort: 8080
